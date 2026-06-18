@@ -32,6 +32,7 @@ he --version
 |---------|---------|--------------|
 | `he parse` | Extract knowledge from documents | `-t` template, `-o` output, `-l` language |
 | `he show` | Visualize knowledge graph | — |
+| `he export obsidian` | Export to an Obsidian vault | `-o` output, `--name`, `-f` force |
 | `he search` | Semantic search in knowledge abstract | `-n` top-k results |
 | `he talk` | Chat with knowledge abstract | `-i` interactive, `-q` query |
 | `he feed` | Add documents incrementally | — |
@@ -148,6 +149,7 @@ he show ./output/
 - **[`he search`](commands/search.md)** — Semantic search
 - **[`he talk`](commands/talk.md)** — Chat with knowledge abstract
 - **[`he info`](commands/info.md)** — View knowledge abstract statistics
+- **[`he export obsidian`](commands/export.md)** — Export to an Obsidian vault
 
 ### Management
 

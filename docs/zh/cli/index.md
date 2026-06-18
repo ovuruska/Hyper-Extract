@@ -32,6 +32,7 @@ he --version
 |---------|---------|--------------|
 | `he parse` | 从文档提取知识 | `-t` 模板, `-o` 输出, `-l` 语言 |
 | `he show` | 可视化知识图谱 | — |
+| `he export obsidian` | 导出为 Obsidian 知识库 | `-o` 输出, `--name`, `-f` 强制 |
 | `he search` | 知识库语义搜索 | `-n` top-k 结果数 |
 | `he talk` | 与知识库对话 | `-i` 交互模式, `-q` 查询 |
 | `he feed` | 增量添加文档 | — |
@@ -148,6 +149,7 @@ he show ./output/
 - **[`he search`](commands/search.md)** — 语义搜索
 - **[`he talk`](commands/talk.md)** — 与知识库对话
 - **[`he info`](commands/info.md)** — 查看知识库统计信息
+- **[`he export obsidian`](commands/export.md)** — 导出为 Obsidian 知识库
 
 ### 管理
 

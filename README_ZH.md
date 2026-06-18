@@ -133,7 +133,7 @@ he search ./output/ "苏轼有哪些重要的作品？"
 he show ./output/
 
 # 导出为 Obsidian 知识库（Markdown 笔记 + [[双向链接]]）
-he export ./output/ -o ./vault/
+he export obsidian ./output/ -o ./vault/
 ```
 
 <details>

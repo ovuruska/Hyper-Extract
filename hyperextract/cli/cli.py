@@ -136,7 +136,10 @@ def main(
                     ("he talk <ka_path> [-i]", "Chat with KA"),
                     ("he search <ka_path> <query>", "Semantic search"),
                     ("he show <ka_path>", "Visualize KA"),
-                    ("he export <ka_path> -o <vault>", "Export to Obsidian vault"),
+                    (
+                        "he export obsidian <ka_path> -o <vault>",
+                        "Export to Obsidian vault",
+                    ),
                 ],
             ),
         ]
@@ -440,13 +443,17 @@ def show(ka_path: str = typer.Argument(..., help="Knowledge Abstract directory")
     console.print(f"[dim]  he talk {ka_path} -i           # Interactive chat[/dim]")
 
 
-@app.command(name="export")
-def export(
+export_app = typer.Typer(
+    name="export",
+    help="Export a Knowledge Abstract to other formats",
+    no_args_is_help=True,
+)
+
+
+@export_app.command(name="obsidian")
+def export_obsidian_cmd(
     ka_path: str = typer.Argument(..., help="Knowledge Abstract directory"),
     output: str = typer.Option(..., "--output", "-o", help="Output vault directory"),
-    fmt: str = typer.Option(
-        "obsidian", "--format", "-F", help="Export format (obsidian)"
-    ),
     name: Optional[str] = typer.Option(
         None, "--name", help="Vault name used for the index note"
     ),
@@ -458,13 +465,7 @@ def export(
     ),
 ):
     """Export a Knowledge Abstract to an Obsidian vault (Markdown + wikilinks)."""
-    logger.info("command=export ka_path=%s output=%s format=%s", ka_path, output, fmt)
-
-    if fmt != "obsidian":
-        console.print(
-            f"[red]Error:[/red] Unsupported format '{fmt}'. Supported: obsidian."
-        )
-        raise typer.Exit(1)
+    logger.info("command=export-obsidian ka_path=%s output=%s", ka_path, output)
 
     path = validate_ka_with_data(ka_path)
     template, lang = get_template_from_ka(path)
@@ -520,6 +521,9 @@ def export(
     )
     console.print()
     console.print("[dim]Open the folder as a vault in Obsidian to explore it.[/dim]")
+
+
+app.add_typer(export_app, name="export")
 
 
 @app.command(name="info")

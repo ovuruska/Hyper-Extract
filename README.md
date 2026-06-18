@@ -133,7 +133,7 @@ he search ./output/ "What are Tesla's major achievements?"
 he show ./output/
 
 # Export to an Obsidian vault (Markdown notes + [[wikilinks]])
-he export ./output/ -o ./vault/
+he export obsidian ./output/ -o ./vault/
 ```
 
 <details>
