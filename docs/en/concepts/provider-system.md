@@ -11,6 +11,7 @@ Hyper-Extract supports three ways to connect to LLMs: **OpenAI**, **Alibaba Bail
 | Platform | Model | `json_schema` Support | Compatible | Notes |
 |----------|-------|:---------------------:|:----------:|-------|
 | **OpenAI** | gpt-4o / gpt-4o-mini / gpt-5 | ✅ | ✅ | Native support, recommended |
+| **Anthropic** | claude-opus-4-8 / claude-sonnet-4-6 / claude-haiku-4-5 | ✅ (tool calling) | ✅ | LLM only — no embeddings API (pair with an OpenAI-compatible embedder). Needs `hyperextract[anthropic]` |
 | **Alibaba Bailian** | qwen-plus / qwen-turbo / qwen3.6-plus / deepseek-r1 | ✅ | ✅ | Works out of the box |
 | **Alibaba Bailian** | qwen-max / deepseek-v3 | ❌ | ❌ | Only `json_object`; `json_schema` not supported |
 
@@ -42,6 +43,14 @@ llm, emb = create_client("openai", api_key="sk-xxx")
 
 # Bailian
 llm, emb = create_client("bailian", api_key="sk-xxx")
+
+# Anthropic (Claude) — LLM only; Anthropic has no embeddings API, so
+# pair it with an OpenAI-compatible embedder.
+# Keys: ANTHROPIC_API_KEY (or CLAUDE_API_KEY) for the LLM, OPENAI_API_KEY for embeddings.
+llm, emb = create_client(
+    llm="anthropic",  # default model: claude-opus-4-8 (override with "anthropic:<model>")
+    embedder="openai:text-embedding-3-small",
+)
 
 # Local vLLM
 llm, emb = create_client(
