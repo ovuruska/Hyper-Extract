@@ -38,6 +38,7 @@ he --version
 | `he feed` | 增量添加文档 | — |
 | `he info` | 显示知识库统计信息 | — |
 | `he build-index` | 构建/重建搜索索引 | `-f` 强制重建 |
+| `he clean` | 删除 KA 的索引（或整个 KA） | `-a` all, `-y` yes |
 | `he list` | 列出模板和方法 | `template` 或 `method` |
 | `he config` | 管理配置 | `init`, `show`, `set` |
 
@@ -154,6 +155,7 @@ he show ./output/
 ### 管理
 
 - **[`he build-index`](commands/build-index.md)** — 构建搜索索引
+- **[`he clean`](commands/clean.md)** — 删除 KA 的索引，或整个 KA
 - **[`he list`](commands/list.md)** — 列出可用模板/方法
 - **[`he config`](commands/config.md)** — 配置管理
 

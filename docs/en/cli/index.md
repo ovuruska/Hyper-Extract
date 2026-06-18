@@ -38,6 +38,7 @@ he --version
 | `he feed` | Add documents incrementally | — |
 | `he info` | Show knowledge abstract statistics | — |
 | `he build-index` | Build/rebuild search index | `-f` force rebuild |
+| `he clean` | Remove a KA's index (or the whole KA) | `-a` all, `-y` yes |
 | `he list` | List templates and methods | `template` or `method` |
 | `he config` | Manage configuration | `init`, `show`, `set` |
 
@@ -154,6 +155,7 @@ he show ./output/
 ### Management
 
 - **[`he build-index`](commands/build-index.md)** — Build search index
+- **[`he clean`](commands/clean.md)** — Remove a KA's index, or the whole KA
 - **[`he list`](commands/list.md)** — List available templates/methods
 - **[`he config`](commands/config.md)** — Configuration management
 

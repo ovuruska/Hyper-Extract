@@ -901,3 +901,52 @@ def build_index(
     console.print("[dim]Now you can:[/dim]")
     console.print(f'[dim]  he search {ka_path} "keyword"  # Semantic search[/dim]')
     console.print(f"[dim]  he talk {ka_path} -i           # Interactive chat[/dim]")
+
+
+@app.command(name="clean")
+def clean(
+    ka_path: str = typer.Argument(..., help="Knowledge Abstract directory"),
+    all_: bool = typer.Option(
+        False,
+        "--all",
+        "-a",
+        help="Remove the ENTIRE Knowledge Abstract (data, metadata, and index)",
+    ),
+    yes: bool = typer.Option(False, "--yes", "-y", help="Skip the confirmation prompt"),
+):
+    """Clean a Knowledge Abstract: remove its search index, or the whole KA with --all."""
+    import shutil
+
+    logger.info("command=clean ka_path=%s all=%s", ka_path, all_)
+
+    # validate_ka_with_data ensures the target really is a KA (has data.json),
+    # so --all never rmtree's an arbitrary mistyped directory.
+    path = validate_ka_with_data(ka_path)
+
+    if all_:
+        target = path
+        what = f"the ENTIRE Knowledge Abstract '{path}' (data, metadata, index)"
+    else:
+        target = path / "index"
+        if not target.exists() or not any(target.iterdir()):
+            console.print("[yellow]Nothing to clean:[/yellow] no index found.")
+            console.print(
+                f"[dim]Tip: use --all to remove the whole KA at {path}.[/dim]"
+            )
+            raise typer.Exit(0)
+        what = f"the search index of '{path}'"
+
+    console.print(f"[yellow]This will permanently delete[/yellow] {what}.")
+    if not yes and not typer.confirm("Are you sure?"):
+        console.print("[dim]Aborted. Nothing was deleted.[/dim]")
+        raise typer.Exit(0)
+
+    try:
+        shutil.rmtree(target)
+    except Exception as e:
+        console.print(f"[red]Error:[/red] Failed to delete {target}: {e}")
+        raise typer.Exit(1)
+
+    console.print(f"[bold green]Cleaned![/bold green] Removed {target}")
+    if not all_:
+        console.print(f"[dim]Rebuild it with: he build-index {ka_path}[/dim]")
