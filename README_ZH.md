@@ -99,10 +99,18 @@ Hyper-Extract 依赖大语言模型的结构化输出能力（`json_schema` 或 
 | 平台 | 已验证模型 |
 |----------|-----------------|
 | **OpenAI** | gpt-4o, gpt-4o-mini, gpt-5 |
+| **Anthropic** | claude-sonnet-4-6, claude-opus-4-1, claude-haiku-4-5 |
 | **阿里云百炼** | qwen-plus, qwen-turbo, deepseek-r1 |
 | **本地 vLLM** | Qwen3.5-9B (GPTQ-Marlin) |
 
 **嵌入模型**（语义搜索）支持任意 OpenAI 兼容端点：`text-embedding-3-small`、`text-embedding-v4`（百炼）、`bge-m3`（本地 vLLM）。
+
+> **Anthropic 说明：** Claude 仅用于 **LLM**（设置 `ANTHROPIC_API_KEY`）。Anthropic 没有嵌入接口，请搭配 OpenAI 兼容的嵌入模型使用：
+> ```python
+> from hyperextract import create_client
+> llm, emb = create_client(llm="anthropic", embedder="openai:text-embedding-3-small")
+> ```
+> 需安装额外依赖：`pip install 'hyperextract[anthropic]'`。
 
 > 📖 完整指南：[Provider 系统与本地模型支持](https://yifanfeng97.github.io/Hyper-Extract/latest/zh/concepts/provider-system/)
 

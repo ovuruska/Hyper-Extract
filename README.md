@@ -99,10 +99,18 @@ Hyper-Extract relies on the LLM's structured output capability (`json_schema` or
 | Platform | Verified Models |
 |----------|-----------------|
 | **OpenAI** | gpt-4o, gpt-4o-mini, gpt-5 |
+| **Anthropic** | claude-sonnet-4-6, claude-opus-4-1, claude-haiku-4-5 |
 | **阿里云百炼** | qwen-plus, qwen-turbo, deepseek-r1 |
 | **Local vLLM** | Qwen3.5-9B (GPTQ-Marlin) |
 
 **Embedding models** (semantic search) work with any OpenAI-compatible endpoint: `text-embedding-3-small`, `text-embedding-v4` (Bailian), `bge-m3` (local vLLM).
+
+> **Anthropic note:** Claude is used for the **LLM** (set `ANTHROPIC_API_KEY`). Anthropic has no embeddings API, so pair it with an OpenAI-compatible embedder:
+> ```python
+> from hyperextract import create_client
+> llm, emb = create_client(llm="anthropic", embedder="openai:text-embedding-3-small")
+> ```
+> Requires the extra: `pip install 'hyperextract[anthropic]'`.
 
 > 📖 Full guide: [Provider System & Local Model Support](https://yifanfeng97.github.io/Hyper-Extract/latest/concepts/provider-system/)
 

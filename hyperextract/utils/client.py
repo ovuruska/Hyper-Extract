@@ -44,7 +44,43 @@ PROVIDER_PRESETS: Dict[str, Dict[str, str | None]] = {
         "default_llm": None,
         "default_embedder": None,
     },
+    # Anthropic (Claude). Uses the native ChatAnthropic client, so base_url is
+    # left empty (the SDK targets api.anthropic.com by default). Anthropic has
+    # no embeddings API, hence default_embedder is None — pair it with an
+    # OpenAI-compatible embedder.
+    "anthropic": {
+        "base_url": "",
+        "default_llm": "claude-sonnet-4-6",
+        "default_embedder": None,
+    },
+    "claude": {
+        "base_url": "",
+        "default_llm": "claude-sonnet-4-6",
+        "default_embedder": None,
+    },
 }
+
+# Providers handled by the native langchain-anthropic client rather than the
+# OpenAI-compatible path.
+ANTHROPIC_PROVIDERS = ("anthropic", "claude")
+
+# Environment variables checked (in order) for each provider's API key.
+PROVIDER_API_KEY_ENV: Dict[str, Tuple[str, ...]] = {
+    "anthropic": ("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"),
+    "claude": ("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"),
+}
+
+
+def _env_api_key(provider: str) -> str:
+    """Return the first non-empty API key from the provider's env vars.
+
+    Falls back to OPENAI_API_KEY for OpenAI-compatible providers.
+    """
+    for var in PROVIDER_API_KEY_ENV.get(provider, ("OPENAI_API_KEY",)):
+        value = os.environ.get(var, "")
+        if value:
+            return value
+    return ""
 
 
 class CompatibleEmbeddings(Embeddings):
@@ -274,6 +310,33 @@ def create_llm(
     config = _parse_client_spec(spec, api_key=api_key, default_kind="llm")
     config.update(kwargs)
 
+    provider = config.get("provider", "")
+
+    if provider in ANTHROPIC_PROVIDERS:
+        try:
+            from langchain_anthropic import ChatAnthropic
+        except ImportError as e:
+            raise ImportError(
+                "The Anthropic provider requires 'langchain-anthropic'. "
+                "Install it with: pip install 'hyperextract[anthropic]'"
+            ) from e
+
+        resolved_key = config["api_key"] or _env_api_key(provider)
+        if not resolved_key:
+            raise ValueError(
+                "No Anthropic API key found. Set ANTHROPIC_API_KEY (or CLAUDE_API_KEY), "
+                "or pass api_key=..."
+            )
+
+        return ChatAnthropic(
+            model=config["model"],
+            api_key=resolved_key,
+            temperature=config.get("temperature", 0),
+            # Anthropic requires max_tokens; default low (1024) truncates large
+            # structured extractions, so use a more generous default.
+            max_tokens=config.get("max_tokens", 4096),
+        )
+
     from langchain_openai import ChatOpenAI
 
     return ChatOpenAI(
@@ -305,6 +368,14 @@ def create_embedder(
         >>> emb = create_embedder("vllm:bge-m3@localhost:8001/v1", api_key="dummy")
     """
     config = _parse_client_spec(spec, api_key=api_key, default_kind="embedder")
+
+    if config.get("provider", "") in ANTHROPIC_PROVIDERS:
+        raise ValueError(
+            "Anthropic does not provide an embeddings API. Configure a separate "
+            "OpenAI-compatible embedder, e.g. "
+            'create_client(llm="anthropic", embedder="openai:text-embedding-3-small", ...) '
+            "or a local vLLM/bge-m3 endpoint."
+        )
 
     base_url = config.get("base_url", "")
     uses_custom = bool(base_url and base_url.rstrip("/") != OPENAI_API_URL)

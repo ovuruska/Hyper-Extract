@@ -85,6 +85,9 @@ def config_callback(
     console.print(
         "  [green]OPENAI_API_KEY[/green] - OpenAI API key (used if not set in config)"
     )
+    console.print(
+        "  [green]ANTHROPIC_API_KEY[/green] - Anthropic/Claude API key (or CLAUDE_API_KEY)"
+    )
     console.print("  [green]OPENAI_BASE_URL[/green] - Custom API base URL (optional)")
     console.print()
 
@@ -148,7 +151,7 @@ def llm(
         None,
         "--provider",
         "-p",
-        help="Provider preset: openai, bailian, vllm",
+        help="Provider preset: openai, anthropic, bailian, vllm",
     ),
     api_key: Optional[str] = typer.Option(
         None,
@@ -209,7 +212,7 @@ def embedder(
         None,
         "--provider",
         "-p",
-        help="Provider preset: openai, bailian, vllm",
+        help="Provider preset: openai, anthropic, bailian, vllm",
     ),
     api_key: Optional[str] = typer.Option(
         None,
@@ -272,7 +275,7 @@ def init(
         None,
         "--provider",
         "-p",
-        help="Provider preset: openai, bailian, vllm",
+        help="Provider preset: openai, anthropic, bailian, vllm",
     ),
     api_key: Optional[str] = typer.Option(
         None,

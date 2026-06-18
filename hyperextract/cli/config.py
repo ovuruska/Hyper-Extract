@@ -29,7 +29,36 @@ PROVIDER_PRESETS: Dict[str, Dict[str, str | None]] = {
         "default_llm": None,
         "default_embedder": None,
     },
+    # Anthropic (Claude): native client, no base_url, no embeddings API.
+    "anthropic": {
+        "base_url": "",
+        "default_llm": "claude-sonnet-4-6",
+        "default_embedder": None,
+    },
+    "claude": {
+        "base_url": "",
+        "default_llm": "claude-sonnet-4-6",
+        "default_embedder": None,
+    },
 }
+
+# Environment variables checked (in order) for each provider's API key.
+PROVIDER_API_KEY_ENV: Dict[str, tuple] = {
+    "anthropic": ("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"),
+    "claude": ("ANTHROPIC_API_KEY", "CLAUDE_API_KEY"),
+}
+
+
+def _env_api_key(provider: str) -> str:
+    """Return the first non-empty API key from the provider's env vars.
+
+    Falls back to OPENAI_API_KEY for OpenAI-compatible providers.
+    """
+    for var in PROVIDER_API_KEY_ENV.get(provider, ("OPENAI_API_KEY",)):
+        value = os.environ.get(var, "")
+        if value:
+            return value
+    return ""
 
 
 @dataclass
@@ -135,7 +164,7 @@ class ConfigManager:
         config = LLMConfig(
             provider=self.llm.provider,
             model=self.llm.model,
-            api_key=self.llm.api_key or os.environ.get("OPENAI_API_KEY", ""),
+            api_key=self.llm.api_key or _env_api_key(self.llm.provider),
             base_url=self._resolve_base_url(
                 self.llm.provider,
                 self.llm.base_url or os.environ.get("OPENAI_BASE_URL", ""),
@@ -148,7 +177,7 @@ class ConfigManager:
         config = EmbedderConfig(
             provider=self.embedder.provider,
             model=self.embedder.model,
-            api_key=self.embedder.api_key or os.environ.get("OPENAI_API_KEY", ""),
+            api_key=self.embedder.api_key or _env_api_key(self.embedder.provider),
             base_url=self._resolve_base_url(
                 self.embedder.provider,
                 self.embedder.base_url or os.environ.get("OPENAI_BASE_URL", ""),
