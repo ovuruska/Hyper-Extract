@@ -17,11 +17,30 @@
 
 [📖 English Version](./README.md) · [中文版](./README_ZH.md)
 
-[![PyPI Version](https://img.shields.io/pypi/v/hyperextract)](https://pypi.org/project/hyperextract/)
-[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-success)]()
-[![Docs](https://img.shields.io/badge/docs-online-blue)](https://yifanfeng97.github.io/Hyper-Extract/latest/)
+<!-- Status ribbon -->
+<p align="center">
+  <a href="https://trendshift.io/repositories/25420" target="_blank">
+    <img src="https://trendshift.io/api/badge/repositories/25420" alt="Trendshift" width="250" height="55">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/hyperextract/">
+    <img src="https://img.shields.io/pypi/v/hyperextract?style=for-the-badge&logo=pypi&logoColor=white&labelColor=1a1a2e&color=3776ab" alt="PyPI Version">
+  </a>
+  <a href="https://python.org">
+    <img src="https://img.shields.io/badge/python-3.11%2B-3776ab?style=for-the-badge&logo=python&logoColor=white&labelColor=1a1a2e" alt="Python Version">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-06b6d4?style=for-the-badge&labelColor=1a1a2e" alt="License">
+  </a>
+  <a href="https://yifanfeng97.github.io/Hyper-Extract/latest/">
+    <img src="https://img.shields.io/badge/docs-online-3b82f6?style=for-the-badge&logo=readthedocs&logoColor=white&labelColor=1a1a2e" alt="Docs">
+  </a>
+  <a href="https://github.com/yifanfeng97/hyper-extract/stargazers">
+    <img src="https://img.shields.io/github/stars/yifanfeng97/hyper-extract?style=for-the-badge&logo=github&labelColor=1a1a2e&color=facc15" alt="GitHub Stars">
+  </a>
+</p>
 
 <br/>
 
@@ -34,6 +53,18 @@
 
 <br/>
 </div>
+
+## 📰 What's New
+
+<!-- News snippets are derived from the latest merged PRs. Update as new releases land. -->
+
+- **🔌 MCP Server** — Query your knowledge abstracts from Claude Desktop and IDE agents with `he-mcp`. *(PR #40)*
+- **🧠 Anthropic Claude Support** — Use `claude-opus-4-8`, `claude-sonnet-4-6`, and `claude-haiku-4-5` directly as your LLM provider. *(PR #38)*
+- **📝 Obsidian Export** — Turn any graph into an Obsidian vault with Markdown notes linked by `[[wikilinks]]`. *(PR #37)*
+- **🧹 `he clean`** — Remove a KA's index or the whole knowledge abstract in one command. *(PR #39)*
+- **🔧 Reliability Fixes** — True mean for multi-chunk embeddings, capped OpenAI-compatible batch sizes, and resolved multi-word `llm_*` merge strategies. *(PRs #35, #36, #41)*
+
+See the full changelog in the [GitHub releases](https://github.com/yifanfeng97/hyper-extract/releases).
 
 Hyper-Extract is an intelligent, LLM-powered knowledge extraction and evolution framework. It radically simplifies transforming highly unstructured texts into persistent, predictable, and strongly-typed **Knowledge Abstracts**. It effortlessly extracts information into a wide spectrum of formats—ranging from simple **Collections** (Lists/Sets) and **Pydantic Models**, to complex **Knowledge Graphs**, **Hypergraphs**, and even **Spatio-Temporal Graphs**.
 
@@ -253,6 +284,10 @@ Tools: `list_templates`, `info`, `search`, `ask` (RAG), `export_obsidian`. Full 
 
 Contributions are welcome! Please submit [Issues](https://github.com/yifanfeng97/hyper-extract/issues) and [PRs](https://github.com/yifanfeng97/hyper-extract/pulls).  
 Licensed under **Apache-2.0**.
+
+## 🔒 Security
+
+This project has been security assessed by [MseeP.ai](https://mseep.ai/app/yifanfeng97-hyper-extract).
 
 ## ⭐ Star History
 

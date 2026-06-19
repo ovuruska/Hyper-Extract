@@ -17,11 +17,30 @@
 
 [📖 English Version](./README.md) · [中文版](./README_ZH.md)
 
-[![PyPI版本](https://img.shields.io/pypi/v/hyperextract)](https://pypi.org/project/hyperextract/)
-[![Python版本](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org)
-[![开源协议](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![状态](https://img.shields.io/badge/status-active-success)]()
-[![文档](https://img.shields.io/badge/docs-online-blue)](https://yifanfeng97.github.io/Hyper-Extract/latest/zh/)
+<!-- 状态徽章带 -->
+<p align="center">
+  <a href="https://trendshift.io/repositories/25420" target="_blank">
+    <img src="https://trendshift.io/api/badge/repositories/25420" alt="Trendshift" width="250" height="55">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/hyperextract/">
+    <img src="https://img.shields.io/pypi/v/hyperextract?style=for-the-badge&logo=pypi&logoColor=white&labelColor=1a1a2e&color=3776ab" alt="PyPI版本">
+  </a>
+  <a href="https://python.org">
+    <img src="https://img.shields.io/badge/python-3.11%2B-3776ab?style=for-the-badge&logo=python&logoColor=white&labelColor=1a1a2e" alt="Python版本">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-06b6d4?style=for-the-badge&labelColor=1a1a2e" alt="开源协议">
+  </a>
+  <a href="https://yifanfeng97.github.io/Hyper-Extract/latest/zh/">
+    <img src="https://img.shields.io/badge/docs-online-3b82f6?style=for-the-badge&logo=readthedocs&logoColor=white&labelColor=1a1a2e" alt="文档">
+  </a>
+  <a href="https://github.com/yifanfeng97/hyper-extract/stargazers">
+    <img src="https://img.shields.io/github/stars/yifanfeng97/hyper-extract?style=for-the-badge&logo=github&labelColor=1a1a2e&color=facc15" alt="GitHub Stars">
+  </a>
+</p>
 
 <br/>
 
@@ -34,6 +53,18 @@
 
 <br/>
 </div>
+
+## 📰 最新动态
+
+<!-- 以下摘要来自最近合并的 PR，随版本更新而更新。 -->
+
+- **🔌 MCP 服务器** — 通过 `he-mcp` 在 Claude Desktop 和 IDE 智能体中查询你的知识摘要。*(PR #40)*
+- **🧠 Anthropic Claude 支持** — 直接调用 `claude-opus-4-8`、`claude-sonnet-4-6`、`claude-haiku-4-5` 作为 LLM 提供商。*(PR #38)*
+- **📝 Obsidian 导出** — 将任意图谱导出为 Obsidian 知识库，Markdown 笔记通过 `[[双向链接]]` 关联。*(PR #37)*
+- **🧹 `he clean` 命令** — 一条命令清理知识摘要的索引或整个 KA。*(PR #39)*
+- **🔧 稳定性修复** — 多 chunk 嵌入采用真实均值、限制 OpenAI 兼容接口的批处理大小、修复多词 `llm_*` 合并策略。*(PRs #35、#36、#41)*
+
+完整更新日志请参阅 [GitHub releases](https://github.com/yifanfeng97/hyper-extract/releases)。
 
 Hyper-Extract 是一个智能的、由大语言模型（LLM）驱动的知识提取与演进框架。它极大地简化了将杂乱不堪的文本转化为持久化、强类型的**知识摘要（Knowledge Abstracts）**的过程。无论从基础的**集合（Collection/List）和**结构化模型（Model），还是到高阶复杂的**知识图谱（Knowledge Graph）**、**超图（Hypergraph）**，甚至是**时空图谱（Spatio-Temporal Graph）**，它都能轻松拿捏。
 
@@ -253,6 +284,10 @@ he-mcp        # stdio MCP 服务器
 
 热烈欢迎社区提交 [Issues](https://github.com/yifanfeng97/hyper-extract/issues) 和 [PRs](https://github.com/yifanfeng97/hyper-extract/pulls)。  
 项目基于 **Apache-2.0** 协议开源。
+
+## 🔒 安全认证
+
+本项目已通过 [MseeP.ai](https://mseep.ai/app/yifanfeng97-hyper-extract) 安全审计。
 
 ## ⭐ Star 历史趋势
 
