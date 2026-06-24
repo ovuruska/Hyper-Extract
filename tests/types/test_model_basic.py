@@ -1,5 +1,7 @@
 """Unit tests for AutoModel basic functionality."""
 
+from datetime import datetime, timedelta
+
 import pytest
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -107,11 +109,16 @@ class TestAutoModelBasic:
             embedder=embedder,
         )
 
-        original_updated_at = model.metadata["updated_at"]
+        # Seed a known-past timestamp so the assertion does not depend on the
+        # resolution of datetime.now(): with mocked clients feed_text can finish
+        # within the same clock tick as construction, making the new timestamp
+        # equal (not greater) and the test intermittently fail.
+        past = datetime.now() - timedelta(seconds=1)
+        model.metadata["updated_at"] = past
 
         model.feed_text(SHORT_TEXT)
 
-        assert model.metadata["updated_at"] > original_updated_at
+        assert model.metadata["updated_at"] > past
 
     def test_create_empty_instance(self, llm_client, embedder):
         """Test that _create_empty_instance creates a properly configured instance."""

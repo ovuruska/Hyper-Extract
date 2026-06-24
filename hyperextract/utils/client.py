@@ -172,11 +172,19 @@ class CompatibleEmbeddings(Embeddings):
         counts: Dict[int, int] = {}
 
         def _embed_batch(b: List[Tuple[str, int]]) -> None:
+            # Skip blank chunks: many OpenAI-compatible providers (e.g. Bailian /
+            # DashScope) reject empty-string input with a 400. Blank texts are
+            # backfilled with a zero vector after all batches complete.
+            non_blank = [(text, idx) for text, idx in b if text.strip()]
+            if not non_blank:
+                return
             response = self._client.embeddings.create(
-                input=[text for text, _ in b],
+                input=[text for text, _ in non_blank],
                 model=self._model,
             )
-            for (text, orig_idx), emb_data in zip(b, response.data, strict=False):
+            for (text, orig_idx), emb_data in zip(
+                non_blank, response.data, strict=False
+            ):
                 emb = emb_data.embedding
                 if orig_idx not in sums:
                     sums[orig_idx] = list(emb)
@@ -196,20 +204,30 @@ class CompatibleEmbeddings(Embeddings):
             _embed_batch(batch)
 
         # Divide each running sum by its chunk count to get the mean embedding.
+        dim: Optional[int] = None
         for orig_idx, running in sums.items():
             count = counts[orig_idx]
-            all_embeddings[orig_idx] = [v / count for v in running]
+            mean = [v / count for v in running]
+            all_embeddings[orig_idx] = mean
+            dim = len(mean)
 
-        # Fill in any missing embeddings with empty-string embedding
+        # Backfill blank texts (which were skipped above) with a zero vector so
+        # the output stays aligned with the input. We never send an empty string
+        # to the API. If every input was blank we have no reference dimension, so
+        # probe once with a non-empty placeholder to learn it.
         missing_indices = [i for i, e in enumerate(all_embeddings) if e is None]
         if missing_indices:
-            response = self._client.embeddings.create(
-                input="",
-                model=self._model,
-            )
-            default_emb = response.data[0].embedding
+            if dim is None:
+                # Non-whitespace placeholder: a single space can be stripped to
+                # empty by strict providers and rejected like an empty string.
+                response = self._client.embeddings.create(
+                    input=".",
+                    model=self._model,
+                )
+                dim = len(response.data[0].embedding)
+            zero_vector = [0.0] * dim
             for i in missing_indices:
-                all_embeddings[i] = default_emb
+                all_embeddings[i] = list(zero_vector)
 
         return all_embeddings  # type: ignore[return-value]
 

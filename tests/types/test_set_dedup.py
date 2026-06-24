@@ -1,5 +1,7 @@
 """Unit tests for AutoSet deduplication functionality."""
 
+from datetime import datetime, timedelta
+
 import pytest
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -293,3 +295,45 @@ class TestAutoSetDedup:
         assert len(copied) == 1
         assert "Python" in copied
         assert copied is not auto_set
+
+    def test_update_adds_all_items(self, llm_client, embedder):
+        """update() adds every item in the list, not the whole list as one entry."""
+        auto_set = AutoSet(
+            item_schema=KeywordItemSchema,
+            llm_client=llm_client,
+            embedder=embedder,
+            key_extractor=lambda x: x.term,
+        )
+
+        auto_set.update(
+            [
+                KeywordItemSchema(term="Python"),
+                KeywordItemSchema(term="Java"),
+                KeywordItemSchema(term="Rust"),
+            ]
+        )
+
+        assert len(auto_set) == 3
+        assert "Python" in auto_set
+        assert "Java" in auto_set
+        assert "Rust" in auto_set
+
+    def test_copy_preserves_created_at(self, llm_client, embedder):
+        """copy() keeps the original created_at and refreshes updated_at."""
+        auto_set = AutoSet(
+            item_schema=KeywordItemSchema,
+            llm_client=llm_client,
+            embedder=embedder,
+            key_extractor=lambda x: x.term,
+        )
+        auto_set.add(KeywordItemSchema(term="Python"))
+
+        # Seed a known-past created_at so we can assert the copy preserves it
+        # rather than resetting it to "now".
+        past = datetime.now() - timedelta(days=1)
+        auto_set.metadata["created_at"] = past
+
+        copied = auto_set.copy()
+
+        assert copied.metadata["created_at"] == past
+        assert copied.metadata["updated_at"] > past

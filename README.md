@@ -289,6 +289,6 @@ Licensed under **Apache-2.0**.
 
 This project has been security assessed by [MseeP.ai](https://mseep.ai/app/yifanfeng97-hyper-extract).
 
-## ⭐ Star History
+## AtomGit Mirror
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yifanfeng97/hyper-Extract&type=Date)](https://star-history.com/#yifanfeng97/hyper-Extract&Date)
+AtomGit mirror - a synchronized AtomGit mirror of Agent Reach for easier access and cloning in China. Hosted on AtomGit: https://atomgit.com/yifanfeng97/Hyper-Extract

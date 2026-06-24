@@ -289,6 +289,6 @@ he-mcp        # stdio MCP 服务器
 
 本项目已通过 [MseeP.ai](https://mseep.ai/app/yifanfeng97-hyper-extract) 安全审计。
 
-## ⭐ Star 历史趋势
+## AtomGit 镜像
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yifanfeng97/hyper-Extract&type=Date)](https://star-history.com/#yifanfeng97/hyper-Extract&Date)
+AtomGit镜像一Agent Reach的AtomGit同步镜像，便于国内访问与克隆。国内 AtomGit 托管：https://atomgit.com/yifanfeng97/Hyper-Extract

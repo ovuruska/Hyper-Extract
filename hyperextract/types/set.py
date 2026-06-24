@@ -530,7 +530,11 @@ class AutoSet(BaseAutoType[AutoSetSchema[ItemSchema]], Generic[ItemSchema]):
         Args:
             items: List of items to add.
         """
-        self.add(items)
+        # add() takes a single item and would wrap the whole list as one entry;
+        # pass the list straight to the backing store so each item is added.
+        self._data_memory.add(items)
+        self.clear_index()
+        self.metadata["updated_at"] = datetime.now()
 
     def discard(self, key: Any) -> None:
         """Removes an item by its unique key value, silently ignoring if not found.
@@ -601,7 +605,9 @@ class AutoSet(BaseAutoType[AutoSetSchema[ItemSchema]], Generic[ItemSchema]):
         items_copy = [item.model_copy(deep=True) for item in self._data_memory.items]
         new_set._data_memory.add(items_copy)
         new_set.metadata = self.metadata.copy()
-        new_set.metadata["created_at"] = datetime.now()
+        # A copy preserves the original creation time and refreshes the
+        # modification time (matching AutoList.copy()).
+        new_set.metadata["updated_at"] = datetime.now()
 
         return new_set
 

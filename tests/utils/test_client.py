@@ -347,6 +347,57 @@ class TestCompatibleEmbeddings:
 
         assert result == [[0.1, 0.2, 0.3]]
 
+    def test_blank_text_not_sent_and_zero_filled(self, mock_openai_client):
+        """Blank texts are never sent to the API and backfill as a zero vector.
+
+        Providers like Bailian/DashScope reject empty-string input, so a blank
+        document must not appear in the request and must still keep the output
+        aligned with the input.
+        """
+        emb = CompatibleEmbeddings(
+            model="test-model",
+            api_key="sk-test",
+            base_url="http://test/v1",
+        )
+        mock_openai_client.embeddings.create.return_value = MagicMock(
+            data=[
+                MagicMock(embedding=[0.1, 0.2, 0.3]),
+                MagicMock(embedding=[0.4, 0.5, 0.6]),
+            ]
+        )
+        with patch.object(emb, "_client", mock_openai_client):
+            result = emb.embed_documents(["hello", "", "world"])
+
+        # Output aligns with input; blank index is a zero vector.
+        assert len(result) == 3
+        assert result[0] == [0.1, 0.2, 0.3]
+        assert result[1] == [0.0, 0.0, 0.0]
+        assert result[2] == [0.4, 0.5, 0.6]
+
+        # The blank string was never included in any API request.
+        assert mock_openai_client.embeddings.create.call_count == 1
+        sent = mock_openai_client.embeddings.create.call_args.kwargs["input"]
+        assert sent == ["hello", "world"]
+
+    def test_all_blank_probes_with_non_empty_input(self, mock_openai_client):
+        """When every input is blank, the dimension probe uses non-empty input."""
+        emb = CompatibleEmbeddings(
+            model="test-model",
+            api_key="sk-test",
+            base_url="http://test/v1",
+        )
+        mock_openai_client.embeddings.create.return_value = MagicMock(
+            data=[MagicMock(embedding=[0.0, 0.0])]
+        )
+        with patch.object(emb, "_client", mock_openai_client):
+            result = emb.embed_documents(["", "   "])
+
+        assert result == [[0.0, 0.0], [0.0, 0.0]]
+        # Exactly one (probe) call, and its input is non-empty.
+        assert mock_openai_client.embeddings.create.call_count == 1
+        probe_input = mock_openai_client.embeddings.create.call_args.kwargs["input"]
+        assert isinstance(probe_input, str) and probe_input.strip()
+
 
 # =============================================================================
 # get_client (config file)
